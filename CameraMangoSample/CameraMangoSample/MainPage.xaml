@@ -1,0 +1,161 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="CameraMangoSample.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:System="clr-namespace:System;assembly=mscorlib"  xmlns:ec="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions" 
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    mc:Ignorable="d" d:DesignWidth="728" d:DesignHeight="480"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    DataContext="{Binding Main,Source={StaticResource Locator}}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Landscape" Orientation="Landscape"
+    shell:SystemTray.IsVisible="True">
+    <phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="ResolutionTemplate">
+            <StackPanel Orientation="Horizontal">
+                <RadioButton x:Name="reslou" GroupName="resolution" Content="{Binding}" Tag="{Binding}" Click="reslou_Click"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ImageListTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Border BorderThickness="3" BorderBrush="Maroon">
+                <Image x:Name="reslou" Width="50" Height="50" Stretch="Uniform" Source="{Binding}"/>
+                </Border>
+            </StackPanel>
+        </DataTemplate>
+    </phone:PhoneApplicationPage.Resources>
+        <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock x:Name="ApplicationTitle" Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}"/>
+        </StackPanel>
+
+        <!--ContentPanel - place additional content here-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="550" />
+                <ColumnDefinition Width="160" />
+            </Grid.ColumnDefinitions>
+
+            <Rectangle x:Name="CameraHolder" ManipulationCompleted="CameraHolder_ManipulationCompleted" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Visibility="Visible" Width="550" Height="300"   HorizontalAlignment="Left">
+                <Rectangle.Fill>
+                    <VideoBrush x:Name="CameraBrush" />
+                </Rectangle.Fill>
+            </Rectangle>
+            <Border Grid.Column="0" x:Name="bordercap" Canvas.Top="20"  BorderBrush="Aquamarine" BorderThickness="5" Margin="2,0,410,150">
+                <StackPanel >
+                    <TextBlock Text="Preview" FontSize="28"   TextAlignment="Center" Foreground="Black"/>
+                    <Image  x:Name="imagecap" />
+                </StackPanel>
+            </Border>
+
+
+            <ScrollViewer Grid.Column="1" Grid.RowSpan="1" Grid.Row="0" Margin="20,0,0,0" RenderTransformOrigin="0.5,0.5" Visibility="Visible"
+              Canvas.ZIndex="1050"  VerticalAlignment="Top" Height="300" >
+                    <StackPanel>
+                    <Button x:Name="ShutterButton" Content="Take Picture" Click="ShutterButton_Click" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                    <Button x:Name="ResetButton" Content="Reset" Click="ResetButton_Click" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                    <Button x:Name="Flash" Content="Flash" Command="{Binding FlashCommand,Mode=OneWay}"  FontSize="26" FontWeight="ExtraBold" Height="70" />
+                    <Button x:Name="Focus" Content="Focus" Command="{Binding FocusCommand,Mode=OneWay}"  FontSize="26" FontWeight="ExtraBold" Height="70" />
+                    <Button x:Name="Resolution" Command="{Binding ResolutionCommand,Mode=OneWay}"   FontSize="26" FontWeight="ExtraBold" Height="70" >
+                    <Button.Content>
+                        <TextBlock Text="Resolution" TextWrapping="Wrap"/>
+                    </Button.Content>
+                </Button>
+
+                    <Button x:Name="EffectsButton" Content="Effects" Command="{Binding EffectsCommand,Mode=OneWay}" Click="EffectsButton_Click" FontSize="26" FontWeight="ExtraBold" Height="70" />
+                    <Button x:Name="load" Content="LoadImages" Command="{Binding LoadImageCommand,Mode=OneWay}" Click="EffectsButton_Click" FontSize="26" FontWeight="ExtraBold" Height="70" />
+
+                </StackPanel>
+                </ScrollViewer>
+
+            <StackPanel x:Name="grdOption" Visibility="{Binding GrdOptions,Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+               
+                <StackPanel.RenderTransform>
+                    <CompositeTransform/>
+                </StackPanel.RenderTransform>
+                <RadioButton x:Name="Auto" Content="Auto" Click="OptionClick" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                <RadioButton x:Name="Off" Content="Off" Click="OptionClick" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                <RadioButton x:Name="On" Content="On" Click="OptionClick" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                <RadioButton x:Name="RedEyeReduction" Content="Red Eye Reduction" Click="OptionClick" FontSize="26" FontWeight="ExtraBold" Height="75" />
+            </StackPanel>
+            <StackPanel x:Name="grdEffects"  Visibility="{Binding GrdEffects,Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+
+                <StackPanel.RenderTransform>
+                    <CompositeTransform/>
+                </StackPanel.RenderTransform>
+                <RadioButton x:Name="Grayscale" Content="Grayscale" Click="EffectClick" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                <RadioButton x:Name="negative" Content="Negative" Click="EffectClick" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                <RadioButton x:Name="sepia" Content="Sepia" Click="EffectClick" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                <!--<RadioButton x:Name="none" Content="none" Click="EffectClick" FontSize="26" FontWeight="ExtraBold" Height="75" />-->
+            </StackPanel>
+            <StackPanel x:Name="grdFocus"  Visibility="{Binding GrdFocus,Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+
+                <StackPanel.RenderTransform>
+                    <CompositeTransform/>
+                </StackPanel.RenderTransform>
+                <RadioButton x:Name="AutoFocus" Content="AutoFocus" Click="AutoFocus_Click" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                <RadioButton x:Name="Manual" Content="Manual -(Drag a place on Camera)" Click="Manual_Click" FontSize="26" FontWeight="ExtraBold" Height="75" />
+                
+
+            </StackPanel>
+            <StackPanel x:Name="grdResolution"  Visibility="{Binding GrdResolution,Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+
+                <StackPanel.RenderTransform>
+                    <CompositeTransform/>
+                </StackPanel.RenderTransform>
+                <ListBox x:Name="resList" SelectionMode="Single" ItemTemplate="{StaticResource ResolutionTemplate}" SelectionChanged="ListBox_SelectionChanged">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+
+            </StackPanel>
+            <StackPanel x:Name="grdImages"  Visibility="{Binding GrdImages,Mode=TwoWay}" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+
+                <StackPanel.RenderTransform>
+                    <CompositeTransform/>
+                </StackPanel.RenderTransform>
+                <ListBox x:Name="ImageList" SelectionMode="Single" ItemsSource="{Binding Images}" ItemTemplate="{StaticResource ImageListTemplate}" SelectionChanged="ListBox_SelectionChanged">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+
+            </StackPanel>
+        </Grid>
+    </Grid>
+ 
+    <!--Sample code showing usage of ApplicationBar-->
+    <!--<phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
+                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>-->
+
+</phone:PhoneApplicationPage>
